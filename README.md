@@ -1,66 +1,80 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Reservations - Laravel Backend API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+***
 
-## About Laravel
+## Description
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Creation of an online reservation system for a medical clinic.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+#### Frontend (it is another project):
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Include a form that requests the following data:
 
-## Learning Laravel
+- Name
+- DNI (ID)
+- Phone
+- Email
+- Type of appointment: "First consultation" or "review".
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+It is requested:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- After the user enters the DNI, check via AJAX if it exists in the database, if it exists, the value of the type of
+  appointment must be updated to "REVIEW", and if it does not exist, to "FIRST CONSULTATION".
+- We must also validate with Javascript that the email entered is correct.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+#### Backend (this project):
 
-## Laravel Sponsors
+Requests will be classified in order of arrival and the first available hour will be assigned, taking into account that:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+- all days of the week are acceptable for an appointment, except weekends.
+- the consultations last one hour and can only be assigned from 10 in the morning to 10 at night.
+- As hours are assigned, they must be considered to assign new appointments.
+- Two patients cannot be given an appointment at the same time on the same day, nor can “hours” be left empty.
 
-### Premium Partners
+The date and time must be assigned to that appointment, and saved in the database.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+It is requested:
 
-## Contributing
+1. Implement data model in SQL.
+2. Implement reception of data from the form to know if it is the first consultation or not.
+3. Implement a system for assigning appointments/hours, considering that there will be concurrence (that is, N requests
+   can arrive simultaneously via the Internet).
+4. Implement emailing the patient with the appointment with the date, time, and type of appointment.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+***
 
-## Code of Conduct
+## Setup Instructions
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Install the dependencies with composer ([composer installation](https://getcomposer.org/))
 
-## Security Vulnerabilities
+```sh
+composer install
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Start the development server with Laravel Sail (requires [docker](https://www.docker.com/) to be installed and running)
 
-## License
+```sh
+./vendor/bin/sail up -d
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Run migrations
+
+```sh
+./vendor/bin/sail artisan migrate
+```
+
+Stop & remove containers
+
+```sh
+./vendor/bin/sail down
+```
+
+***
+
+## INFO:
+
+- Server running on [http://localhost] or [http://0.0.0.0:80].
+- Mailpit running on [http://localhost:8025] or [http://0.0.0.0:8025]. Check emails sent on development.
+  See [laravel mailpit](https://laravel.com/docs/10.x/mail#mailtrap)
+
+***
